@@ -57,3 +57,7 @@ git push origin feature-name
 Finally open a pull request!
 
 Happy coding!
+
+## Walk through video
+https://drive.google.com/file/d/1ZCqQfHpPGcrnw2SIN_6W6U2TFMh7KXfM/view
+
