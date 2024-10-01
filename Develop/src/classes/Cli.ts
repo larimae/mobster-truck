@@ -408,7 +408,7 @@ class Cli {
               if (this.vehicles[i] instanceof Truck) {
               this.findVehicleToTow(this.vehicles[i] as Truck);
               return;
-            }
+            } else { console.log('Only trucks can tow other vehicles.'); }
             }
           }
         } else if (answers.action === 'Wheelie') {
@@ -418,7 +418,7 @@ class Cli {
                 const selectedMotorbike = this.vehicles[i] as Motorbike;
                 selectedMotorbike.wheelie();
               return;
-            }
+            } else { console.log('This vehicle cannot wheelie.'); }
             }
           }
         }
