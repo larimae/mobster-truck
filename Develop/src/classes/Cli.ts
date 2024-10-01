@@ -15,8 +15,8 @@ class Cli {
   exit: boolean = false;
 
   // TODO: Update the constructor to accept Truck and Motorbike objects as well
-  constructor(vehicles: (Car | Truck | Motorbike)[]) {
-    this.vehicles = vehicles;
+  constructor(vehicles1: (Car | Truck | Motorbike)[]) {
+    this.vehicles = vehicles1;
   }
 
   // static method to generate a vin
@@ -192,8 +192,8 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
+          [],
           parseInt(answers.towingCapacity),
-          []
         );
         // push the car to the vehicles array
         this.vehicles.push(truck);
@@ -266,6 +266,7 @@ class Cli {
         // TODO: perform actions on the motorbike
         const frontWheel = new Wheel(answers.frontWheelBrand, answers.frontWheelDiameter);
         const rearWheel = new Wheel(answers.rearWheelBrand, answers.rearWheelDiameter);
+        const bikeWheels = [frontWheel, rearWheel];
         const motorbike = new Motorbike(
           // TODO: The generateVin method is static and should be called using the class name Cli, make sure to use Cli.generateVin() for creating a truck and motorbike as well!
           Cli.generateVin(),
@@ -275,7 +276,7 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
-          []
+          bikeWheels
         );
         // push the car to the vehicles array
         this.vehicles.push(motorbike);
@@ -289,7 +290,7 @@ class Cli {
 
   // method to find a vehicle to tow
   // TODO: add a parameter to accept a truck object
-  findVehicleToTow(): void {
+  findVehicleToTow(vehicle: Truck): void {
     inquirer
       .prompt([
         {
@@ -301,11 +302,17 @@ class Cli {
               name: `${vehicle.vin} -- ${vehicle.make} ${vehicle.model}`,
               value: vehicle,
             };
+
           }),
         },
       ])
       .then((answers) => {
         // TODO: check if the selected vehicle is the truck
+        if (answers.vehicleToTow.vin === vehicle.vin) {
+            console.log('Cannot tow itself!');
+        } else {
+          vehicle.tow(answers.vehicleToTow);
+        }
         // TODO: if it is, log that the truck cannot tow itself then perform actions on the truck to allow the user to select another action
         // TODO: if it is not, tow the selected vehicle then perform actions on the truck to allow the user to select another action
       });
@@ -329,6 +336,8 @@ class Cli {
             'Turn right',
             'Turn left',
             'Reverse',
+            'Tow',
+            'Wheelie',
             'Select or create another vehicle',
             'Exit',
           ],
@@ -390,6 +399,15 @@ class Cli {
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin) {
               this.vehicles[i].reverse();
+            }
+          }
+        } else if (answers.action === 'Tow') {
+          for (let i = 0; i < this.vehicles.length; i++) {
+            if (this.vehicles[i].vin === this.selectedVehicleVin) {
+              if (this.vehicles[i] instanceof Truck) {
+              this.findVehicleToTow(this.vehicles[i] as Truck);
+              return;
+            }
             }
           }
         }
